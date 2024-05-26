@@ -9,16 +9,8 @@
   # overlays
   nixpkgs.overlays = [    
     (self: super: 
-      {
-        google-chrome = (super.google-chrome.override (prev: rec{
-          speechd = "";		
-        })).overrideAttrs (oldAttrs: rec{
-          name = "google-chrome";		
-          src = super.fetchurl {	
-            url = "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb";
-            sha256 = "sha256-9nZjyJnXvOO1iZea3mdsj5FYkylrWnhColZ+q+X/xcU=";
-          };
-        });    		
+      {        
+          speechd = "";		       
       }
     )
   ];
@@ -40,7 +32,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # video driver
-  services.xserver.videoDrivers = [ "fbdev" ];
+  #services.xserver.videoDrivers = [ ];
   #nixpkgs.config.nvidia.acceptLicense = true;   
   #hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_390;
   #hardware.nvidia.modesetting.enable = true;
@@ -63,7 +55,7 @@
   
   #zram
   zramSwap.enable = true;
-  zramSwap.memoryPercent = 800;  
+  zramSwap.memoryPercent = 100;  
   
   #filesystem
   boot.supportedFilesystems = [
@@ -88,7 +80,7 @@
   #'';
 
   # docker
-  #virtualisation.docker.enable = true;
+  virtualisation.docker.enable = true;
    
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -118,9 +110,9 @@
   # ENV
   environment.variables = {
     "WLR_NO_HARDWARE_CURSORS" = "1";
-    "WLR_RENDERER" = "pixman";
-    "WLR_RENDERER_ALLOW_SOFTWARE" = "1";
-    "LIBGL_ALWAYS_SOFTWARE" = "1";
+    #"WLR_RENDERER" = "pixman";
+    #"WLR_RENDERER_ALLOW_SOFTWARE" = "1";
+    #"LIBGL_ALWAYS_SOFTWARE" = "1";
   };
 
   # Fonts  
@@ -130,14 +122,14 @@
   services.gvfs.enable = true;
 
   # picom
-  services.picom.enable = true;
+  services.picom.enable = false;
   services.picom.fade = true;
   services.picom.shadow = false;
   services.picom.shadowExclude = [
     "window_type *= 'toolbar'"
     "window_type *= 'dock'"
     "window_type *= 'desktop'"
-  ];
+  ];  
   #services.picom.fadeExclude = [ 
   #  "window_type *= 'menu'"
   #];
@@ -269,7 +261,8 @@
     p7zip     
     git
     baobab
-    winbox  
+    #winbox  
+    docker-compose
   ] ++ (
     if (config.services.xserver.desktopManager.lxqt.enable == true)
     then with pkgs; [
@@ -341,7 +334,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  #services.openssh.enable = true;
+  services.openssh.enable = true;
   
   # ftp
   #services.vsftpd.enable = true;
@@ -362,7 +355,7 @@
 
   
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 21 22 ];
+  networking.firewall.allowedTCPPorts = [ 80 21 22 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;  
